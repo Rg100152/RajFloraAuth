@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RajFloraAuth | Animated Floral Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    /* =========================================================
+       Global Setup
+       ========================================================= */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      perspective: 1200px; /* Enables Deep 3D Space */
+      background: linear-gradient(135deg, #2a085c 0%, #0f0326 100%);
+      position: relative;
+    }
+
+    .hidden { display: none !important; }
+
+    /* =========================================================
+       Canvas for Floating Flowers & Falling Petals Animation
+       ========================================================= */
+    #flowerCanvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* Ambient Glowing Orbs Background */
+    .glow-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      z-index: 0;
+      opacity: 0.6;
+      animation: floatOrb 8s infinite alternate ease-in-out;
+    }
+
+    .orb-1 {
+      width: 350px;
+      height: 350px;
+      background: #8b2fc9;
+      top: 10%;
+      left: 15%;
+    }
+
+    .orb-2 {
+      width: 300px;
+      height: 300px;
+      background: #ff5e97;
+      bottom: 10%;
+      right: 15%;
+      animation-delay: -4s;
+    }
+
+    @keyframes floatOrb {
+      0% { transform: translateY(0) scale(1); }
+      100% { transform: translateY(-40px) scale(1.1); }
+    }
+
+    /* =========================================================
+       Main Card Container (Image Replica + 3D Tilt)
+       ========================================================= */
+    .card-container {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 420px;
+      background: #ffffff;
+      border-radius: 24px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4), 0 0 40px rgba(155, 47, 201, 0.2);
+      transform-style: preserve-3d;
+      transition: transform 0.15s ease-out;
+      overflow: visible; /* To allow floating badge overlap */
+      animation: popIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.8) translateZ(-200px); }
+      to { opacity: 1; transform: scale(1) translateZ(0); }
+    }
+
+    /* Top Floating Lock Badge */
+    .floating-lock-badge {
+      position: absolute;
+      top: -20px;
+      right: -15px;
+      width: 80px;
+      height: 80px;
+      background: #ffffff;
+      border-radius: 50%;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 20;
+      transform: translateZ(40px); /* 3D pop effect */
+      animation: pulseBadge 3s infinite alternate ease-in-out;
+    }
+
+    .floating-lock-badge svg {
+      width: 36px;
+      height: 36px;
+      fill: #8b2fc9;
+    }
+
+    @keyframes pulseBadge {
+      0% { transform: translateZ(40px) scale(1); }
+      100% { transform: translateZ(40px) scale(1.08); }
+    }
+
+    /* Card Top Purple Header */
+    .card-header-purple {
+      background: linear-gradient(135deg, #a832e8 0%, #751bb5 100%);
+      height: 220px;
+      border-top-left-radius: 24px;
+      border-top-right-radius: 24px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    /* Three Dots Window Top-Left */
+    .window-dots {
+      position: absolute;
+      top: 18px;
+      left: 20px;
+      display: flex;
+      gap: 8px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 50%;
+    }
+
+    /* Big Round Avatar Ring */
+    .avatar-circle {
+      width: 105px;
+      height: 105px;
+      border: 8px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 15px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(5px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      transform: translateZ(25px);
+    }
+
+    .avatar-circle svg {
+      width: 55px;
+      height: 55px;
+      fill: #ffffff;
+    }
+
+    /* Card Bottom Form Section */
+    .card-body {
+      padding: 35px 35px 40px;
+      background: #ffffff;
+      border-bottom-left-radius: 24px;
+      border-bottom-right-radius: 24px;
+    }
+
+    .form-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: #751bb5;
+      margin-bottom: 4px;
+    }
+
+    .form-subtext {
+      font-size: 11px;
+      color: #888888;
+      margin-bottom: 25px;
+      font-weight: 500;
+    }
+
+    .form-subtext a {
+      color: #751bb5;
+      font-weight: 700;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    /* Pill-Shaped Input Fields */
+    .input-group {
+      position: relative;
+      margin-bottom: 18px;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 18px;
+      height: 18px;
+      fill: #a0a0a0;
+      transition: fill 0.3s;
+    }
+
+    .input-field {
+      width: 100%;
+      height: 48px;
+      padding: 10px 20px 10px 48px;
+      background-color: #f1f2f6;
+      border: 2px solid transparent;
+      border-radius: 25px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #333333;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    .input-field::placeholder {
+      color: #a0a0a0;
+      font-weight: 500;
+    }
+
+    .input-field:focus {
+      border-color: #a832e8;
+      background-color: #ffffff;
+      box-shadow: 0 4px 15px rgba(168, 50, 232, 0.15);
+    }
+
+    .input-field:focus + .input-icon {
+      fill: #a832e8;
+    }
+
+    /* Options Row */
+    .options-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: #777777;
+      margin-bottom: 25px;
+      padding: 0 5px;
+    }
+
+    .remember-me {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .remember-me input {
+      accent-color: #a832e8;
+    }
+
+    .forgot-link {
+      color: #a0a0a0;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .forgot-link:hover {
+      color: #a832e8;
+      text-decoration: underline;
+    }
+
+    /* =========================================================
+       3D Interactive Button (Special 3D Effect)
+       ========================================================= */
+    .btn-3d-wrapper {
+      perspective: 1000px;
+      position: relative;
+    }
+
+    .btn-3d {
+      width: 100%;
+      height: 48px;
+      background: linear-gradient(135deg, #a832e8 0%, #751bb5 100%);
+      color: #ffffff;
+      border: none;
+      border-radius: 25px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(117, 27, 181, 0.4);
+      transform-style: preserve-3d;
+      transition: transform 0.1s ease-out, box-shadow 0.1s ease-out, background 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-3d:hover {
+      background: linear-gradient(135deg, #b73df7 0%, #8322c9 100%);
+    }
+
+    /* Cursor Click Hand Prompt Icon (Like Reference Image) */
+    .click-prompt-icon {
+      position: absolute;
+      right: 15px;
+      bottom: -15px;
+      width: 32px;
+      height: 32px;
+      pointer-events: none;
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+      animation: bounceHand 2s infinite alternate ease-in-out;
+    }
+
+    @keyframes bounceHand {
+      0% { transform: translateY(0) rotate(0deg); }
+      100% { transform: translateY(-6px) rotate(-10deg); }
+    }
+
+    /* =========================================================
+       Dashboard View (Strictly Protected Route)
+       ========================================================= */
+    .dashboard-card {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 800px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      border-radius: 24px;
+      padding: 45px;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+      animation: popIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .dash-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #f1f2f6;
+      padding-bottom: 20px;
+      margin-bottom: 30px;
+    }
+
+    .dash-header h1 {
+      color: #751bb5;
+      font-size: 26px;
+      font-weight: 800;
+    }
+
+    .btn-logout {
+      background: #751bb5;
+      color: #fff;
+      border: none;
+      padding: 10px 22px;
+      border-radius: 25px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(117, 27, 181, 0.3);
+      transition: background 0.2s;
+    }
+
+    .btn-logout:hover {
+      background: #a832e8;
+    }
+
+    .widget-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+    }
+
+    .widget {
+      background: #ffffff;
+      padding: 22px;
+      border-radius: 16px;
+      border-left: 4px solid #a832e8;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+    }
+
+    .widget h3 {
+      font-size: 15px;
+      color: #333;
+      margin-bottom: 8px;
+    }
+
+    .widget p {
+      font-size: 12px;
+      color: #666;
+      line-height: 1.5;
+    }
+
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      top: 25px;
+      right: 25px;
+      background: #a832e8;
+      color: white;
+      padding: 14px 28px;
+      border-radius: 30px;
+      font-size: 13px;
+      font-weight: 700;
+      box-shadow: 0 10px 25px rgba(168, 50, 232, 0.4);
+      transform: translateX(180%);
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 1000;
+    }
+
+    .toast.show {
+      transform: translateX(0);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background Canvas for Flowering Animation -->
+  <canvas id="flowerCanvas"></canvas>
+  <div class="glow-orb orb-1"></div>
+  <div class="glow-orb orb-2"></div>
+
+  <!-- Toast Message -->
+  <div id="toastAlert" class="toast">Status Message</div>
+
+  <!-- =========================================================
+       Authentication Card (Exact Replica + 3D Tilt)
+       ========================================================= -->
+  <div id="auth-view" class="card-container" onmousemove="handleCard3DTilt(event, this)" onmouseleave="resetCard3DTilt(this)">
+    
+    <!-- Top-Right Floating Lock Badge -->
+    <div class="floating-lock-badge">
+      <svg viewBox="0 0 24 24">
+        <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
+      </svg>
+    </div>
+
+    <!-- Purple Header Section -->
+    <div class="card-header-purple">
+      <div class="window-dots">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+
+      <div class="avatar-circle">
+        <svg viewBox="0 0 24 24">
+          <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- White Form Section -->
+    <div class="card-body">
+      
+      <!-- SIGN IN FORM -->
+      <form id="loginForm" onsubmit="handleLogin(event)">
+        <h2 class="form-title">Sign in</h2>
+        <div class="form-subtext">
+          Not registered? <a onclick="toggleForm('signup')">Click here to register.</a>
+        </div>
+
+        <div class="input-group">
+          <input type="text" id="loginUser" class="input-field" placeholder="Username" required>
+          <svg class="input-icon" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+        </div>
+
+        <div class="input-group">
+          <input type="password" id="loginPass" class="input-field" placeholder="Password" required>
+          <svg class="input-icon" viewBox="0 0 24 24"><path d="M12.65 10C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H17v4h4v-4h2v-4H12.65zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
+        </div>
+
+        <div class="options-row">
+          <label class="remember-me">
+            <input type="checkbox" checked> Remember Me
+          </label>
+          <a href="#" class="forgot-link">Forgot Password?</a>
+        </div>
+
+        <!-- 3D Button + Cursor Indicator -->
+        <div class="btn-3d-wrapper">
+          <button type="submit" class="btn-3d">Sign in</button>
+          
+          <!-- Click Hand Icon -->
+          <svg class="click-prompt-icon" viewBox="0 0 24 24">
+            <path fill="#ffffff" stroke="#000000" stroke-width="1.5" stroke-linejoin="round" d="M9 11.25V4.5a1.5 1.5 0 013 0v6.75M12 10.5V3a1.5 1.5 0 013 0v7.5M15 11.25V5.25a1.5 1.5 0 013 0v6M18 12.75V7.5a1.5 1.5 0 013 0v8.25c0 4.142-3.358 7.5-7.5 7.5H12c-3.1 0-5.83-1.89-6.9-4.7l-2.2-5.5a1.5 1.5 0 012.7-1.2l1.4 3.5"/>
+          </svg>
+        </div>
+      </form>
+
+      <!-- SIGN UP FORM (Hidden Default - Strict System Requirement) -->
+      <form id="signupForm" class="hidden" onsubmit="handleSignup(event)">
+        <h2 class="form-title">Register</h2>
+        <div class="form-subtext">
+          Already registered? <a onclick="toggleForm('login')">Click here to sign in.</a>
+        </div>
+
+        <div class="input-group">
+          <input type="text" id="signupUser" class="input-field" placeholder="Choose Username" required>
+          <svg class="input-icon" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+        </div>
+
+        <div class="input-group">
+          <input type="password" id="signupPass" class="input-field" placeholder="Create Password" required>
+          <svg class="input-icon" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+        </div>
+
+        <div class="btn-3d-wrapper" style="margin-top: 25px;">
+          <button type="submit" class="btn-3d">Create Account</button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- =========================================================
+       Dashboard (Secured Route)
+       ========================================================= -->
+  <div id="dashboard-view" class="dashboard-card hidden">
+    <div class="dash-header">
+      <h1 id="welcomeText">Welcome, Raj!</h1>
+      <button class="btn-logout" onclick="processLogout()">Sign Out</button>
+    </div>
+    
+    <div class="widget-grid">
+      <div class="widget">
+        <h3>Floral Animation Engine 🌸</h3>
+        <p>Dynamic sakura petals and floating flowers are continuously rendering on the background canvas in real-time.</p>
+      </div>
+      <div class="widget">
+        <h3>3D Interactive Space</h3>
+        <p>Move your mouse over the buttons or card to trigger real-time 3D rotation and depth physics.</p>
+      </div>
+      <div class="widget">
+        <h3>RajFloraAuth Secure DB</h3>
+        <p>Your user profile has been authenticated via local storage. You are now inside the protected zone.</p>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- =========================================================
+       JS: Canvas Flower Animations, 3D Tilt & Auth Logic
+       ========================================================= -->
+  <script>
+    // Initialize Systems on Load
+    window.onload = () => {
+      const session = sessionStorage.getItem('rajflora_user');
+      if (session) {
+        showDashboard(JSON.parse(session).username);
+      }
+      initFlowerCanvas();
+      initButton3DEffect();
+    };
+
+    /* ---------------------------------------------------------
+       1. FLOWER & PETAL CANVAS ANIMATION ENGINE
+       --------------------------------------------------------- */
+    function initFlowerCanvas() {
+      const canvas = document.getElementById('flowerCanvas');
+      const ctx = canvas.getContext('2d');
+
+      let width = (canvas.width = window.innerWidth);
+      let height = (canvas.height = window.innerHeight);
+
+      window.addEventListener('resize', () => {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+      });
+
+      // Petal Particle Object
+      class Petal {
+        constructor() {
+          this.reset();
+        }
+
+        reset() {
+          this.x = Math.random() * width;
+          this.y = Math.random() * -height;
+          this.size = Math.random() * 12 + 8;
+          this.speedY = Math.random() * 1.5 + 0.8;
+          this.speedX = Math.random() * 1 - 0.5;
+          this.rotation = Math.random() * 360;
+          this.rotSpeed = Math.random() * 2 - 1;
+          this.opacity = Math.random() * 0.7 + 0.3;
+          // Colors: Soft Cherry Blossom Pink & Lavender Violet
+          this.color = Math.random() > 0.4 ? '#ff9bbd' : '#d28eff';
+        }
+
+        update() {
+          this.y += this.speedY;
+          this.x += Math.sin(this.y * 0.01) + this.speedX;
+          this.rotation += this.rotSpeed;
+
+          if (this.y > height + 20) {
+            this.reset();
+          }
+        }
+
+        draw() {
+          ctx.save();
+          ctx.translate(this.x, this.y);
+          ctx.rotate((this.rotation * Math.PI) / 180);
+          ctx.globalAlpha = this.opacity;
+
+          // Draw Sakura Petal Shape
+          ctx.beginPath();
+          ctx.fillStyle = this.color;
+          ctx.moveTo(0, 0);
+          ctx.bezierCurveTo(-this.size, -this.size / 2, -this.size, this.size, 0, this.size * 1.5);
+          ctx.bezierCurveTo(this.size, this.size, this.size, -this.size / 2, 0, 0);
+          ctx.fill();
+
+          ctx.restore();
+        }
+      }
+
+      // Generate Petals Pool
+      const petals = Array.from({ length: 45 }, () => new Petal());
+
+      // Animation Loop
+      function animate() {
+        ctx.clearRect(0, 0, width, height);
+        petals.forEach(p => {
+          p.update();
+          p.draw();
+        });
+        requestAnimationFrame(animate);
+      }
+
+      animate();
+    }
+
+    /* ---------------------------------------------------------
+       2. ISOLATED 3D BUTTON TILT & SHADOW PHYSICS
+       --------------------------------------------------------- */
+    function initButton3DEffect() {
+      const buttons = document.querySelectorAll('.btn-3d');
+      buttons.forEach(btn => {
+        btn.addEventListener('mousemove', (e) => {
+          const rect = btn.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          const centerX = rect.width / 2;
+          const centerY = rect.height / 2;
+
+          const rotateX = ((y - centerY) / centerY) * -18; // 3D Tilt angle
+          const rotateY = ((x - centerX) / centerX) * 18;
+
+          btn.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.04) translateZ(10px)`;
+          btn.style.boxShadow = `${-rotateY}px ${rotateX + 12}px 25px rgba(117, 27, 181, 0.5)`;
+        });
+
+        btn.addEventListener('mouseleave', () => {
+          btn.style.transform = `rotateX(0deg) rotateY(0deg) scale(1) translateZ(0)`;
+          btn.style.boxShadow = `0 8px 20px rgba(117, 27, 181, 0.4)`;
+        });
+      });
+    }
+
+    /* ---------------------------------------------------------
+       3. CARD 3D TILT ON MOUSEMOVE
+       --------------------------------------------------------- */
+    function handleCard3DTilt(e, card) {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+
+      const rotateX = ((y - centerY) / centerY) * -5; // Subtle card tilt
+      const rotateY = ((x - centerX) / centerX) * 5;
+
+      card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.01, 1.01, 1.01)`;
+    }
+
+    function resetCard3DTilt(card) {
+      card.style.transform = `rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+    }
+
+    /* ---------------------------------------------------------
+       4. AUTHENTICATION LOGIC (Strict Requirements)
+       --------------------------------------------------------- */
+    function toggleForm(type) {
+      const login = document.getElementById('loginForm');
+      const signup = document.getElementById('signupForm');
+      if (type === 'signup') {
+        login.classList.add('hidden');
+        signup.classList.remove('hidden');
+      } else {
+        signup.classList.add('hidden');
+        login.classList.remove('hidden');
+      }
+    }
+
+    // Register User
+    function handleSignup(e) {
+      e.preventDefault();
+      const user = document.getElementById('signupUser').value.trim();
+      const pass = document.getElementById('signupPass').value.trim();
+
+      let db = JSON.parse(localStorage.getItem('rajflora_db')) || [];
+
+      if (db.find(u => u.username === user)) {
+        displayToast("Username already registered!");
+        return;
+      }
+
+      db.push({ username: user, password: pass });
+      localStorage.setItem('rajflora_db', JSON.stringify(db));
+
+      displayToast("Account Created! Please Sign in.");
+      e.target.reset();
+      toggleForm('login');
+      document.getElementById('loginUser').value = user;
+    }
+
+    // Sign In User
+    function handleLogin(e) {
+      e.preventDefault();
+      const user = document.getElementById('loginUser').value.trim();
+      const pass = document.getElementById('loginPass').value.trim();
+
+      let db = JSON.parse(localStorage.getItem('rajflora_db')) || [];
+      const validUser = db.find(u => u.username === user && u.password === pass);
+
+      if (validUser) {
+        sessionStorage.setItem('rajflora_user', JSON.stringify(validUser));
+        displayToast("Sign in Successful! 🌸");
+        showDashboard(validUser.username);
+      } else {
+        displayToast("Invalid Username or Password!");
+      }
+    }
+
+    // Show Protected Dashboard
+    function showDashboard(username) {
+      document.getElementById('auth-view').classList.add('hidden');
+      document.getElementById('dashboard-view').classList.remove('hidden');
+      document.getElementById('welcomeText').innerText = `Welcome, ${username}! 🌸`;
+    }
+
+    // Logout
+    function processLogout() {
+      sessionStorage.removeItem('rajflora_user');
+      document.getElementById('dashboard-view').classList.add('hidden');
+      document.getElementById('auth-view').classList.remove('hidden');
+      document.getElementById('loginPass').value = '';
+      displayToast("Logged out securely.");
+    }
+
+    // Toast Notification
+    function displayToast(msg) {
+      const toast = document.getElementById('toastAlert');
+      toast.innerText = msg;
+      toast.classList.add('show');
+      setTimeout(() => { toast.classList.remove('show'); }, 3000);
+    }
+  </script>
+</body>
+</html>
